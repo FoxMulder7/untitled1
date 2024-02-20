@@ -11,7 +11,7 @@ public class StrokCalculator {
 
 
         if (perv.contains("\" + ")) {
-            massznak = perv.split("\" \\+ ");
+            massznak = perv.split(" \\+ ");
             newsimvol = "+";
 
         } else if (perv.contains("\" - ")) {
@@ -30,6 +30,10 @@ public class StrokCalculator {
             throw new Exception("Ошибка! Математический знак можно использовать только после строчки с кавычками, например \"hello\" + \n Допустимые знаки: *, /, +, -");
         }
 
+        if (massznak[0].length() > 12)
+            throw new Exception("Между \" может быть максимум 10 символов, например \"hellohello\"");
+        if (massznak[1].length() > 12)
+            throw new Exception("Между \" может быть максимум 10 символов, например \"hellohello\"");
 
         String str = massznak[0];
 
@@ -42,17 +46,10 @@ public class StrokCalculator {
         }
 
 
-        if (massznak[0].length() > 12)
-            throw new Exception("Введено больше 10 символов");
-        if (massznak[1].length() > 12)
-            throw new Exception("Введено больше 10 символов");
-
 
         if (newsimvol.equals("*") || newsimvol.equals("/")) {
             if (massznak[1].contains("\"")) throw new Exception("строчку можно делить и умножать только на число");
         }
-
-
 
 
 
@@ -99,9 +96,7 @@ public class StrokCalculator {
             }
 
 
-
         }
-
 
     }
 
@@ -114,7 +109,6 @@ public class StrokCalculator {
         } else {
             System.out.println("\"" + text + "\"");
         }
-
 
     }
 }
