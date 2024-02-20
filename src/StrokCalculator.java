@@ -10,35 +10,50 @@ public class StrokCalculator {
         String newsimvol;
 
 
-        if (perv.contains(" + ")) {
-            massznak = perv.split(" \\+ ");
+        if (perv.contains("\" + ")) {
+            massznak = perv.split("\" \\+ ");
             newsimvol = "+";
 
-        } else if (perv.contains(" - ")) {
+        } else if (perv.contains("\" - ")) {
             massznak = perv.split(" - ");
             newsimvol = "-";
 
-        } else if (perv.contains(" * ")) {
+        } else if (perv.contains("\" * ")) {
             massznak = perv.split(" \\* ");
             newsimvol = "*";
 
-        } else if (perv.contains(" / ")) {
+        } else if (perv.contains("\" / ")) {
             massznak = perv.split(" / ");
             newsimvol = "/";
 
         } else {
-            throw new Exception("Ошибка! Не верный символ");
+            throw new Exception("Ошибка! Математический знак можно использовать только после строчки с кавычками, например \"hello\" + \n Допустимые знаки: *, /, +, -");
         }
 
 
-        if (massznak[0].length() > 10)
+        String str = massznak[0];
+
+        char[] chars = str.toCharArray();
+        if (chars[0] == '\"') {
+            String str2 = String.copyValueOf(chars);
+        }
+        else {
+            throw new Exception("Ошибка! Первое выражение должно быть в кавычках, например \"hello\" ");
+        }
+
+
+        if (massznak[0].length() > 12)
             throw new Exception("Введено больше 10 символов");
-        if (massznak[1].length() > 10)
+        if (massznak[1].length() > 12)
             throw new Exception("Введено больше 10 символов");
+
 
         if (newsimvol.equals("*") || newsimvol.equals("/")) {
             if (massznak[1].contains("\"")) throw new Exception("строчку можно делить и умножать только на число");
         }
+
+
+
 
 
         for (int i = 0; i < massznak.length; i++) {
@@ -74,12 +89,15 @@ public class StrokCalculator {
             int line1 = Integer.parseInt(massznak[1]);
             if (line1 > 10) {
                 throw new Exception("число должно быть не больше 10");
-            } else {
+            } else if (line1 > 0){
                 int line2 = massznak[0].length() / Integer.parseInt(massznak[1]);
                 String result = massznak[0].substring(0, line2);
 
                 printStrok(result);
+            } else if (line1 == 0) {
+                throw new Exception("Нельзя делить на ноль");
             }
+
 
 
         }
