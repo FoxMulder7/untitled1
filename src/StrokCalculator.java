@@ -4,10 +4,10 @@ public class StrokCalculator {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         String scan = scanner.nextLine();
-        System.out.println(parse(scan));
+        System.out.println(excep(scan));
     }
 
-    public static String parse(String scan) throws Exception {
+    public static String excep(String scan) throws Exception {
         String operation;
         String[] words;
 
