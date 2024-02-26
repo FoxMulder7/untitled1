@@ -2,99 +2,103 @@ import java.util.Scanner;
 
 public class StrokCalculator {
     public static void main(String[] args) throws Exception {
-
         Scanner scanner = new Scanner(System.in);
-        String perv = scanner.nextLine();
-        String[] massznak;
-        String newsimvol;
-        String exp = exceptionTextPrint();
+        String scan = scanner.nextLine();
+        System.out.println(parse(scan));
+    }
 
+    public static String parse(String scan) throws Exception {
+        String operation;
+        String[] words;
 
-        if (perv.contains("\" + ")) {
-            massznak = perv.split(" \\+ ");
-            newsimvol = "+";
-        } else if (perv.contains("\" - ")) {
-            massznak = perv.split(" - ");
-            newsimvol = "-";
-        } else if (perv.contains("\" * ")) {
-            massznak = perv.split(" \\* ");
-            newsimvol = "*";
-        } else if (perv.contains("\" / ")) {
-            massznak = perv.split(" / ");
-            newsimvol = "/";
+        if (scan.contains(" + ")) {
+            words = scan.split(" \\+ ");
+            operation = "+";
+        } else if (scan.contains(" * ")) {
+            words = scan.split(" \\* ");
+            operation = "*";
+        } else if (scan.contains(" - ")) {
+            words = scan.split(" - ");
+            operation = "-";
+        } else if (scan.contains(" / ")) {
+            words = scan.split(" / ");
+            operation = "/";
         } else {
-            throw new Exception("Ошибка! Математический знак можно использовать только после строчки с кавычками, например \"hello\" + \n Допустимые знаки: *, /, +, -");
+            throw new Exception("Ошибка! Неизвестный математический знак");
         }
 
 
-        char[] chars = massznak[0].toCharArray();
-        if (chars[0] == '\"') {
-            massznak[0] = String.copyValueOf(chars);
-        } else {
-            throw new Exception("Ошибка! Первое выражение должно быть в кавычках, например \"hello\" ");
-        }
-        if (newsimvol.equals("*") || newsimvol.equals("/")) {
-            if (massznak[1].contains("\"")) throw new Exception("строчку можно делить и умножать только на число");
-        }
-        for (int i = 0; i < massznak.length; i++) {
-            massznak[i] = massznak[i].replace("\"", "");
-        }
-        if (massznak[0].length() > 10 || massznak[1].length() > 10) {
-            throw new Exception(exp);
+        int x1 = words[0].length();
+        char simvol1 = scan.charAt(0);
+        char simvol2 = scan.charAt(x1 - 1);
+        if (simvol1 != '"' || simvol2 != '"') {
+            throw new Exception("первое  слово должно быть в кавычках");
         }
 
 
-        if (newsimvol.equals("+")) {
-            String result = massznak[0] + massznak[1];
-            printStrok(result);
+        if (operation.equals("*") || operation.equals("/")) {
+            if (words[1].contains("\"")) throw new Exception("строчку можно делить и умножать только на число без кавычек");
+        }
 
-        } else if (newsimvol.equals("*")) {
-            int superData2 = Integer.parseInt(massznak[1]);
-            if (superData2 > 10) {
-                throw new Exception("число должно быть не больше 10");
+
+        for (int i = 0; i < words.length; i++) {
+            words[i] = words[i].replace("\"", "");
+        }
+
+
+        if (words[0].length() > 10 || words[1].length() > 10) {
+            throw new Exception("Слова должны содержать не больше 10 символов");
+        }
+
+        String text = calcultorStrok(words[0], words[1], operation);
+
+        return printFinalText(text);
+    }
+
+
+    static String calcultorStrok(String word1, String word2, String simvol) throws Exception {
+        if (simvol.equals("+")) {
+            return word1 + word2;
+        } else if (simvol.equals("*")) {
+            int num1 = Integer.parseInt(word2);
+            if (num1 > 10) {
+                throw new Exception ("Число не должно быть больше 10");
             }
             String result = "";
-            for (int i = 0; i < superData2; i++) {
-                result += massznak[0];
+            for (int i = 0; i < num1; i++) {
+                result += word1;
             }
-            printStrok(result);
-
-        } else if (newsimvol.equals("-")) {
-            int index = massznak[0].indexOf(massznak[1]);
+            return result;
+        } else if (simvol.equals("-")) {
+            int index = word1.indexOf(word2);
             if (index == -1) {
-                System.out.println("\"" + massznak[0] + "\"");
+                return word1;
             } else {
-                String result = massznak[0].substring(0, index);
-                result += massznak[0].substring(index + massznak[1].length());
-                printStrok(result);
+                String result = word1.substring(0, index);
+                result += word1.substring(index + word2.length());
+                return result;
             }
+
         } else {
-            int line1 = Integer.parseInt(massznak[1]);
+            int line1 = Integer.parseInt(word2);
             if (line1 > 10) {
-                throw new Exception("число должно быть не больше 10");
-            } else if (line1 > 0) {
-                int line2 = massznak[0].length() / Integer.parseInt(massznak[1]);
-                String result = massznak[0].substring(0, line2);
-                printStrok(result);
-
-            } else if (line1 == 0) {
-                throw new Exception("Нельзя делить на ноль");
+                throw new Exception("Число не должно быть больше 10");
+            }
+            else if (line1 != 0) {
+                int line2 = word1.length() / Integer.parseInt(word2);
+                return word1.substring(0, line2);
+            } else {
+                throw new Exception("Ошибка");
             }
         }
+
     }
 
-    static void printStrok(String text) {
-
-        if (text.length() > 40) {
-            String rez = text.substring(0, 40);
-            System.out.println("\"" + rez + "...");
-        } else {
-            System.out.println("\"" + text + "\"");
-        }
+    static String printFinalText(String textfinal) {
+        if (textfinal.length() > 40) {
+            String over = textfinal.substring(0, 40);
+            return "\"" + over + "...";
+        } else return "\"" + textfinal + "\"";
     }
 
-    static String exceptionTextPrint() {
-       String exp1 = "Между \" может быть максимум 10 символов, например \"hellohello\"";
-       return exp1;
-    }
 }
